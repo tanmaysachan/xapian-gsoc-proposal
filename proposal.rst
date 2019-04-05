@@ -60,28 +60,32 @@
 .. "How to write a kick-ass proposal for Google Summer of Code":
 .. https://teom.wordpress.com/2012/03/01/how-to-write-a-kick-ass-proposal-for-google-summer-of-code/
 
-======================================
-FILLME WITH THE TITLE OF YOUR PROPOSAL
-======================================
+============================
+Speed up Xapian's Test Suite
+============================
 
 About You
 =========
 
- * Name: FILLME
+ * Name: Tanmay Sachan
 
- * E-mail address: FILLME
+ * E-mail address: tanmay.sachan@research.iiit.ac.in, tnmysachan@gmail.com
 
- * IRC nickname(s): FILLME
+ * IRC nickname(s): Tanmay
 
- * Any personal websites, blogs, social media, etc: FILLME
+ * Any personal websites, blogs, social media, etc: https://www.facebook.com/tanmaysch, https://tanmaysachan.github.io
 
- * github URL: FILLME
+ * github URL: https://github.com/tanmaysachan
 
  * Biography:
 
 .. Tell us a bit about yourself.
 
-FILLME
+I'm a freshman at IIIT-Hyderabad, and my major is Computer Science and Engineering. I love solving
+problems and learning new things. My current interests are linux, compilers and exploring how they
+work. I like to play basketball occasionally and my favourite computer scientist is Edsger W. Dijkstra.
+
+"Perfecting oneself is as much unlearning as it is learning." - Dijkstra
 
 Background Information
 ----------------------
@@ -96,44 +100,79 @@ Background Information
 similar programmes before?  If so, tell us about how it went, and any areas you
 would have liked more help with.**
 
-FILLME
+No, this is my first time taking part in GSOC, and I've not participated in GCI.
 
 **Please tell us about any previous experience you have with Xapian, or other
 systems for indexed text search.**
 
-FILLME
+I currently have 2 merged PRs in Xapian and 1 open.
+
+Merged:
+
+- https://github.com/xapian/xapian/pull/219
+- https://github.com/xapian/xapian/pull/222
+
+Open:
+
+- https://github.com/xapian/xapian/pull/223
+
+Other than that, I have no prior experience with indexed text search systems.
 
 **Tell us about any previous experience with Free Software and Open Source
 other than Xapian.**
 
-FILLME
+I have contributed to other small open source projects for fun, but nothing as serious as Xapian.
+As for using them, my current daily driver is Ubuntu, on which I frequently use Vim, Libre Office,
+Firefox, etc. Most of the software I use on a daily basis is open source.
 
 **What other relevant prior experience do you have (courses taken at college,
 hobbies, holiday jobs, etc)?**
 
-FILLME
+Relevant courses taken at college include Computer systems organisation, Software Systems, Data
+Structures and Algorithms, Discrete Structures.
+
+Other than that, in 2017 and 2018, I was selected among the top 30 school students in India for
+training in computer science for International Olympiad in Informatics, where I mainly studied
+advanced data structures and algorithms and worked primarily with C++.
+
+Again in 2018, I was selected for ACM-ICPC Amritapuri regionals, as a freshman in college.
+
+I have worked extensively in python using libraries and frameworks like numpy, scipy, keras, pytorch, opencv, django,
+etc.
+
+I also have prior experience with Bash, as I've used it frequently to write scripts to automate
+tasks, and for my college assignments.
+
+My main hobby is coding, and I love to learn new things.
 
 **What development platforms, tools and methods do you prefer to use?**
 
-FILLME
+I primarily use Vim as my text editor, and CLion(C/C++)/PyCharm(Python) for navigating through the code. My primary version
+control system is Git. I use Ubuntu 18.04 as my OS.
 
 **Have you previously worked on a project of a similar scope?  If so, tell us
 about it.**
 
-FILLME
+Right now, I'm working on improving the condition of Vlabs, an initiative by the
+Government of India to improve the teaching of Computer Science across low tier engineering
+colleges in India.
 
 **What timezone will you be in during the coding period?**
 
-FILLME
+IST (UTC + 05:30).
 
 **Will your Summer of Code project be the main focus of your time during the
 program?**
 
-FILLME
+Yes. GSoC will be my main focus this summer.
 
 **Expected work hours (e.g. Monday–Friday 9am–5pm UTC)**
 
-FILLME
+Monday-Friday 4:30 AM - 3:30 PM UTC.
+Equivalent to Monday-Friday 10:00 AM - 8:00 PM IST.
+
+Since I will mostly be free this summer, these timings are flexible, and I would be able to devote
+even more time to the project if need be.
 
 **Are you applying for other projects in GSoC this year?  If so, with which
 organisation(s)?**
@@ -142,7 +181,7 @@ organisation(s)?**
 .. we don't have a problem with that, but it's helpful if we're aware of it
 .. so that we know how many backup choices we might need.
 
-FILLME
+No.
 
 Your Project
 ============
@@ -152,14 +191,18 @@ Motivations
 
 **Why have you chosen this particular project?**
 
-FILLME
+This project will help be become a better programmer, and improve my experience with C++. I'll get
+to learn more about how complex software is built and how it functions.
 
 **Who will benefit from your project and in what ways?**
 
 .. For example, think about the likely user-base, what they currently have to
 .. do and how your project will improve things for them.
 
-FILLME
+All the developers of Xapian will benefit from this project. Right now, devs spend a lot of time
+trying to run tests on Xapian, or they try to speed it up by disabling Valgrind, which can cause
+problems. This project aims to improve the speed of the test suite, so that less time will be wasted
+running tests.
 
 Project Details
 ---------------
@@ -168,27 +211,73 @@ Project Details
 
 **Describe any existing work and concepts on which your project is based.**
 
-FILLME
+We know that splitting up the tests into different backends and using automake's parallel test
+harness causes a decent speedup in the runtime of tests, as demonstrated by
+https://github.com/xapian/xapian/pull/210. Taking full advantage of the parallelisation should speed
+up the tests even further.
+
+Current plans for the project:
+
+1) Implement a basic scheduler for tests.
+
+In this part, I will implement a simple scheduler which breaks apart the test cases in groups and
+runs them in parallel by separating them into multiple processes. The collate-test script gathers the testcases and runs them according to each
+condition. I will be modifying that script to run the tests in processes by the grouping that
+already exists.
+After successful completion of this basic scheduler, I will be implementing a Scheduler class, with
+better scheduling, which will be receiving test cases from api_collated.h file, analyzing(by test
+run times) them and then grouping them.
+
+2) Handling the results with parallel tests.
+
+I will be making the harness output the results in TAP format. While collecting the results, we can
+keep track of failed results to provide a better summary of failed testcases.
+
+3) Implement a time tracker for testcases.
+
+In this part, I will implement a time tracker for testcases, which will report the time taken by
+each testcase to run.
+Another part would be checking out the slow testcases, and analyzing them for potential speed
+improvements.
+This timer can be implementing using a simple chrono clock inside the run_tests function, which will
+record how long each test execution takes.
+
+4) Fixing testcases which require multiple backends.
+
+Certain testcases which make use of multiple backends (using BackendManagerLocal) need to rewritten.
+BackendManagerLocal needs to be removed, and the harness should support using multiple backends.
+I will be implementing a new harness backend which would use a local shard and remote shard
+together, and so if anyone wants to write a new test case which makes use of both, they will be able
+to do so via the condition set in DEFINE_TESTCASE.
+
+If all goes smoothly, and my work is finished before the completion of summer, I would like to work
+on "Python bindings improvements" and "Performance test suite".
+
+I will start off by getting familiar with the relevant section of the codebase for the stretch goals during the
+community bonding period, and discuss with the mentors about the specific implementation details.
 
 **Do you have any preliminary findings or results which suggest that your
 approach is possible and likely to succeed?**
 
-FILLME
+Guruhegde's pull request https://github.com/xapian/xapian/pull/210 tells us that just by seperating
+the tests into different backends, and running them parallely using automake's parallel test
+harness causes a speed increase from 15 minutes to 9 minutes.
 
 **What other approaches to have your considered, and why did you reject those in
 favour of your chosen approach?**
 
-FILLME
+No other approach considered.
 
 **Please note any uncertainties or aspects which depend on further research or
 investigation.**
 
-FILLME
+None so far.
 
 **How useful will your results be when not everything works out exactly as
 planned?**
 
-FILLME
+The test suite will experience an improvement regardless of the full project completion. The project is
+broken into pieces, each of which is somewhat of an attempt to improve and speed up the testsuite.
 
 Project Timeline
 ----------------
@@ -239,7 +328,90 @@ Project Timeline
 .. any university classes or exams, vacations, etc), make sure you include them
 .. in your project timeline.
 
-FILLME
+April 9 - May 6:
+
+- Get https://github.com/xapian/xapian/pull/223 merged.
+- Work on other small issues.
+
+I will be having my end semester exams around this time, so I wouldn't be able to contribute a lot
+to Xapian.
+
+Community Bonding Period: May 6 - May 27
+
+- Understand the codebase better.
+- Discuss about stretch goals.
+- Start discussing the implementation of stretch goals.
+- Do pending research, if any.
+
+Week 1: May 27 - Jun 3
+
+- Implement a new harness backend, remove BackendManagerLocal altogether.
+
+Week 2: Jun 3 - Jun 10
+
+- Fix testcases which regenerate Databases each time, slowing down performance.
+
+Week 3: Jun 10 - Jun 17
+
+- Implement timer to analyze testcase run times.
+- Discuss about slow testcases, and ways to improve their performance.
+
+Week 4: Jun 17 - Jun 24
+
+- Continue improving the testcases.
+- Implement "slow" tags for testcases which are slow and can't be sped up.
+
+Phase 1 evaluation
+
+Week 5: Jun 24 - Jul 1
+
+- Start implementing a basic scheduler which seperates the harness backends.
+
+Week 6: Jul 1 - Jul 8
+
+- Finish implementing the scheduler.
+- Handle errors if any.
+- Test the scheduler thoroughly.
+
+Week 7: Jul 8 - Jul 15
+
+- Handle the results and output from the process, and output them in TAP format.
+- While combining results, keep track of failed testcases and report a summary.
+
+Week 8: Jul 15 - Jul 22
+
+- Buffer week for pending work.
+- Write and/or improve documentation if any.
+
+Phase 2 evaluation
+
+Week 9: Jul 22 - Jul 29
+
+- Implement a proper scheduler class which analyzes testcases by their tags, and chunks them up appropriately.
+
+Week 10: Jul 29 - Aug 5
+
+- Continue working on the scheduler.
+- If finished, test it thoroughly and handle errors.
+
+Week 11: Aug 5 - Aug 12
+
+- Buffer week for pending work.
+- Write and/or improve documentation if any.
+
+Week 12: Aug 12 - Aug 19
+
+- Start working on stretch goals.
+- Write a PyPI package of python bindings for xapian (Stretch goal).
+
+Week 13: Aug 19 - Aug 26
+
+- Work on adding better real world data to Xapian performance tests (Stretch goal).
+
+Final evaluation
+
+If all goes well, I would be completing my main project much quicker than proposed above.
+I will be spending the rest of the time working on the Stretch goals.
 
 Previous Discussion of your Project
 -----------------------------------
@@ -249,7 +421,7 @@ Previous Discussion of your Project
 .. IRC, please say so (and the IRC handle you used if not the one given
 .. above).
 
-FILLME
+Discussed on IRC under the nick "Tanmay".
 
 Licensing of your contributions to Xapian
 -----------------------------------------
@@ -261,7 +433,8 @@ For the avoidance of doubt this includes all contributions to our wiki, mailing
 lists and documentation, including anything you write in your project's wiki
 pages.
 
-FILLME
+Yes, I agree to dual licence all my contributions under the GNU GPL version 2 and all later
+versions, and the MIT/X licence.
 
 .. For more details, including the rationale for this with respect to code,
 .. please see the "Licensing of patches" section in the "HACKING" document:
@@ -273,7 +446,7 @@ Use of Existing Code
 **If you already know about existing code you plan to incorporate or libraries
 you plan to use, please give details.**
 
-FILLME
+No such use planned at the moment for the main project.
 
 .. Code reuse is often a desirable thing, but we need to have a clear
 .. provenance for the code in our repository, and to ensure any dependencies
