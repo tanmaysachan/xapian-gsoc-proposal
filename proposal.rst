@@ -360,6 +360,7 @@ Week 4: Jun 17 - Jun 24
 
 - Continue improving the testcases.
 - Implement "slow" tags for testcases which are slow and can't be sped up.
+- Write and/or improve documentation if any.
 
 Phase 1 evaluation
 
